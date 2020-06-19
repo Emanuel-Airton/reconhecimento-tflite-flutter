@@ -2,10 +2,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:img_clasificacao/helpers/galeria_helper.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-import 'package:img_clasificacao/helpers/camera_helper.dart';
+//import 'package:img_clasificacao/helpers/camera_helper.dart';
 import 'package:img_clasificacao/helpers/tflite_helper.dart';
 import 'package:img_clasificacao/models/tflite_result.dart';
 import 'package:getflutter/getflutter.dart';
+import 'package:image_picker/image_picker.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -52,7 +53,9 @@ class _HomePageState extends State<HomePage> {
               //mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[Padding(padding: EdgeInsets.only(left: 30, right: 45, bottom: 30, top: 30)),
               GFButton(
-                onPressed: (_pickImage),
+                onPressed: (){
+                  ImagePicker.pickImage(source: ImageSource.camera);
+                },
                 text: "camera",
                 icon: Icon(Icons.camera_alt, color: Colors.white,),
                 color: Colors.green[500],
@@ -122,7 +125,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   _pickImage() async {
-    final image = await CameraHelper.pickImage();
+    final image = await ImagePicker.pickImage(source: ImageSource.camera);
     if (image == null) {
       return null;
     }
@@ -134,7 +137,7 @@ class _HomePageState extends State<HomePage> {
       _outputs = outputs;
     });
   }
-
+//testando a nova branch
   _buildResult() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
@@ -148,7 +151,7 @@ class _HomePageState extends State<HomePage> {
           borderRadius: BorderRadius.circular(12),
         ),
         child: _buildResultList(),
-      ),
+      ), 
     );
   }
 
