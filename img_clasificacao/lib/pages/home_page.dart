@@ -137,7 +137,7 @@ class _HomePageState extends State<HomePage> {
       _outputs = outputs;
     });
   }
-
+//
   _buildResult() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
@@ -151,7 +151,7 @@ class _HomePageState extends State<HomePage> {
           borderRadius: BorderRadius.circular(12),
         ),
         child: _buildResultList(),
-      ),
+      ), 
     );
   }
 
