@@ -1,8 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:img_clasificacao/helpers/galeria_helper.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-//import 'package:img_clasificacao/helpers/camera_helper.dart';
 import 'package:img_clasificacao/helpers/tflite_helper.dart';
 import 'package:img_clasificacao/models/tflite_result.dart';
 import 'package:getflutter/getflutter.dart';
@@ -36,108 +34,93 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
         title: Text('Identificação'),
       ),
-     /* floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.photo_camera),
-        onPressed: _pickImage,
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      */
+     
       body: SafeArea(
+
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             _buildResult(),
             _buildImage(),
-            Row(
-              //mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[Padding(padding: EdgeInsets.only(left: 30, right: 45, bottom: 30, top: 30)),
+             
+            Padding(padding: EdgeInsets.fromLTRB(70, 0, 70, 30),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
               GFButton(
                 onPressed: (){
-                  ImagePicker.pickImage(source: ImageSource.camera);
+                  _imgCamera();
+                  return Center(
+                   child: CircularProgressIndicator(),
+                  ); 
                 },
                 text: "camera",
                 icon: Icon(Icons.camera_alt, color: Colors.white,),
                 color: Colors.green[500],
-                size: 50,
+                size: 60,
                 type: GFButtonType.solid,
-              // shape: GFButtonShape.pills,
-                
-              ),Padding(padding: EdgeInsets.only(right: 30)),
+              ),
+              Padding(padding: EdgeInsets.only(right: 30)),
+
               GFButton(
-                onPressed: (_imgGaleria),
+                onPressed: ()async{
+                   await _imgGaleria();
+                   
+                },
                 text: "Galeria",
                 icon: Icon(Icons.photo, color: Colors.white,),
                 color: Colors.green[500],
-                size: 50,
+                size: 60,
                 type: GFButtonType.solid,
-              
               ),
-            ],
-            
+            ],   
             ),
+            
+            
+            
+            )
+             
+            
+          
+
+
+          
+            
+            
           ],
         ),
-
-
-
       ),
     );
   }
 
-  _buildImage() {
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 92.0),
-        child: Container(
-          padding: EdgeInsets.all(8.0),
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: Colors.green[500],
-              width: 3,
-            ),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Center(
-            child: _image == null
-                ? Text('Sem imagem',style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: Colors.green[700]),)
-                : Image.file(
-                    _image,
-                    fit: BoxFit.cover,
-                  ),
-          ),
-        ),
-      ),
-    );
-  }
+  
   _imgGaleria() async {
-    final img = await GaleriaHelper.opengalery();
+    final img = await ImagePicker.pickImage(source: ImageSource.gallery);
     if (img == null) {
       return null;
     }
-
     final saida = await TFLiteHelper.classifyImage(img);
-
     setState(() {
       _image = img;
       _outputs = saida;
     });
   }
 
-  _pickImage() async {
+
+  _imgCamera() async {
     final image = await ImagePicker.pickImage(source: ImageSource.camera);
     if (image == null) {
       return null;
     }
-
     final outputs = await TFLiteHelper.classifyImage(image);
-
     setState(() {
       _image = image;
       _outputs = outputs;
     });
   }
-//testando a nova branch
+
+
   _buildResult() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
@@ -148,7 +131,7 @@ class _HomePageState extends State<HomePage> {
             color: Colors.green[500],
             width: 3,
           ),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(20),
         ),
         child: _buildResultList(),
       ), 
@@ -161,9 +144,9 @@ class _HomePageState extends State<HomePage> {
         child: Text('Sem resultados', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: Colors.green[700]),),
       );
     }
-
     return Center(
-      child: ListView.builder(
+      child: 
+        ListView.builder(
         itemCount: _outputs.length,
         shrinkWrap: true,
         padding: const EdgeInsets.all(20.0),
@@ -188,6 +171,32 @@ class _HomePageState extends State<HomePage> {
             ],
           );
         },
+      ),
+    );
+  
+  }
+  _buildImage() {
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 40.0),
+        child: Container(
+          padding: EdgeInsets.all(8.0),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.green[500],
+              width: 3,
+            ),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Center(
+            child: _image == null
+                ? Text('Sem imagem',style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: Colors.green[700]),)
+                : Image.file(
+                    _image,
+                    fit: BoxFit.cover,
+                  ),
+          ),
+        ),
       ),
     );
   }
