@@ -16,6 +16,7 @@ class Myapp extends StatelessWidget {
    return MaterialApp(
      theme: _buildTheme(),
      home: HomePage(),
+     debugShowCheckedModeBanner: false,
    );
   }
   _buildTheme() {
